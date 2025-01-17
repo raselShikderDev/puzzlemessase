@@ -48,15 +48,15 @@ export const UserSchema:Schema<User> = new Schema({
     },
     password:{
         type:String,
-        required:[true, "Password code is Required"]
+        required:[true, "Password is Required"]
     },
     verifyCode:{
         type:String,
-        required:[true, "Verify code is Required"]
+        required:[true, "Verifcation code is Required"]
     },
     verifiedCodeExpiry:{
         type:Date,
-        required:[true, "Verify code is Required"],
+        required:true,
         default:Date.now(),
     },
     isVerified:{

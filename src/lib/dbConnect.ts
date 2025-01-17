@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 
 type ConnectionObject = {
-    isConnected? : Number
+    isConnected? : number
 }
 
 const connection:ConnectionObject = {}
@@ -22,4 +22,4 @@ const connection:ConnectionObject = {}
     }
  }
 
- default export dbConnect
+ export default dbConnect
