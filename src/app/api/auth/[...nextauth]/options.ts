@@ -3,7 +3,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/dbConnect";
 import userModel from "@/models/userModel";
-import { any } from "zod";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -19,7 +18,8 @@ export const authOptions: NextAuthOptions = {
           placeholder: "yourUsername",
         },
       },
-      async authorize(credentials, req) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+      async authorize(credentials, req):Promise<any> {
         await dbConnect();
         try {
           const user = await userModel.findOne({
@@ -57,19 +57,37 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+
+callbacks:{
   
-  callbacks:{
-    async session({ session, user, token }) {
-        return session
-      },
-      async jwt({ token, user }) {
-        return token
+  async jwt({ token, user }) {
+    if(user){
+      token._id = user._id?.toString()
+      token.username = user.username
+      token.isAcceptingMessage = user.isAcceptingMessage
+      token.isVerified = user.isVerified
+    }
+    
+    return token
   },
-  pages:{
-    signIn: 'signin',
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async session({ session, token }:any) {
+    if(token){
+      session.user._id = token._id
+      session.user.username = token.username
+      session.user.isAcceptingMessage = token.isAcceptingMessage
+      session.user.isVerified = token.isVerified
+    }
+    return session
   },
-  session:{
-    strategy: "jwt",
-  },
-  secret: process.env.NEXTAUTH_SECRET
-};
+},
+
+session:{
+  strategy: "jwt",
+},
+secret: process.env.NEXTAUTH_SECRET,
+pages:{
+      signIn: '/signin',
+    },
+
+ };
