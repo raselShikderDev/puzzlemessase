@@ -2,44 +2,33 @@ import dbConnect from "@/lib/dbConnect";
 import userModel from "@/models/userModel";
 import { z } from "zod";
 import { usernameValidation } from "@/schemas/signupSchema";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 const usernameQuerySchema = z.object({
   username: usernameValidation,
 });
 
-export default async function CheakUserName(request: NextRequest) {
-    if (request.method !== 'GET') {
-        return NextResponse.json(
-          {
-            success: false,
-            message: `Requested ${request.method} is not available`,
-          },
-          { status: 500 }
-        );
-    }
+export async function GET(request: Request) {
+    
     await dbConnect();
   try {
     const { searchParams } = new URL(request.url);
     const queryParams = searchParams.get("username");
     //Cheaing username availablelity
-    const usernameResult = usernameQuerySchema.safeParse(queryParams);
+    const usernameResult = usernameQuerySchema.safeParse({ username: queryParams });
     console.log(usernameResult);
 
     if (!usernameResult.success) {
-      const usernameError =
-        usernameResult.error.format().username?._errors || [];
+      const errorMessages = usernameResult.error.errors.map(err => err.message);
       return NextResponse.json(
         {
           success: false,
-          message:
-            usernameError?.length > 0
-              ? usernameError.join(",")
-              : "Invalid query parameters",
+          message: errorMessages.join(", "),
         },
         { status: 400 }
       );
     }
+    
 
     const { username } = usernameResult.data;
     console.log(usernameResult.data);
@@ -53,15 +42,15 @@ export default async function CheakUserName(request: NextRequest) {
           success: false,
           message: "username is already taken",
         },
-        { status: 200 }
+        { status: 400 }
       );
     }
     return NextResponse.json(
       {
         success: true,
-        message: "Username is already taken",
+        message: "Username is uniqe",
       },
-      { status: 401 }
+      { status: 200 }
     );
   } catch (error) {
     console.error("Error in cheaking username:", error);

@@ -1,3 +1,3 @@
-MONGO_URI=""
+MONGO_URI="mongodb+srv://raselsikder777rk:nvkyBbpK6kTbUpya@puzzlemessage.yz918.mongodb.net/?retryWrites=true&w=majority&appName=puzzleMessage"
 RESEND_API_KEY="re_bfdY8NfF_HsvuGddhfzJmZg33Zb3Hc8Bv"
 NEXTAUTH_SECRET="puzzleMessage"
