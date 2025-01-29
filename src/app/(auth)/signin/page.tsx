@@ -1,20 +1,19 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
-import { useSession, signIn, signOut } from "next-auth/react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
-export default function Component() {
-  const { data: session } = useSession()
-  if (session) {
-    return (
-      <>
-        Signed in as {session.user.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
-      </>
-    )
-  }
+const Signin = () => {
+  const [username, setUsername] = useState('')
+  const [usernameMessage, setUsernameMessage] = useState('')
+  const [usernameCheaking, setUsernameCheaking] = useState(false)
   return (
-    <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
-    </>
+    <div>
+      
+    </div>
   )
 }
+
+export default Signin
