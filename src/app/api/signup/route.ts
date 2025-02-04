@@ -35,14 +35,14 @@ export async function POST(request: Request) {
               success: false,
               message: "This email address alredy registerd, Please try another email",
             },
-            { status: 501 }
+            { status: 409 }
           );
       } else{
         const hashPassword = await bcrypt.hash(password, 10)
         existingUserByEmail.password = hashPassword
         existingUserByEmail.verifyCode = verifyCode
         existingUserByEmail.verifiedCodeExpiry = new Date(Date.now() + 3600000)
-        await existingUserByEmail.save
+        await existingUserByEmail.save()
       }
       // New code ended here 
     } else {

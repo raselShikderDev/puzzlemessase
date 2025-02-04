@@ -6,3 +6,4 @@ export interface apiResponse{
     isAcceptingMessage?:boolean,
     messages: Array<Message>
 }
+
