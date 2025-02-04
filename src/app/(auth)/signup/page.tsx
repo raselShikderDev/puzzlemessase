@@ -1,14 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useDebounceValue } from "usehooks-ts";
+import {  useDebounceCallback } from "usehooks-ts";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-// import {signInSchema} from "@/schemas/signInSchema"
 import { signupValidation } from "@/schemas/signupSchema";
 import { apiResponse } from "@/types/appResponse";
 import axios, { AxiosError } from "axios";
@@ -28,7 +26,7 @@ const Signin = () => {
   const [usernameMessage, setUsernameMessage] = useState("");
   const [usernameCheaking, setUsernameCheaking] = useState(false);
   const [isSubmiting, setIsSubmiting] = useState(false);
-  const deBouncedUsername = useDebounceValue(username, 300);
+  const deBounced = useDebounceCallback (setUsername, 500);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -44,13 +42,13 @@ const Signin = () => {
   // Handling realtime username cheaking
   useEffect(() => {
     const checkUsername = async () => {
-      if (deBouncedUsername) {
+      if (username) {
         setUsernameCheaking(true);
         setUsernameMessage("");
       }
       try {
         const response = await axios.get(
-          `/api/check-username-unqie?username=${deBouncedUsername}`
+          `/api/check-username-unqie?username=${username}`
         );
 
         setUsernameMessage(response.data.message);
@@ -64,7 +62,7 @@ const Signin = () => {
       }
     };
     checkUsername();
-  }, [deBouncedUsername]);
+  }, [username]);
 
   // Handling user Signup
 
@@ -98,27 +96,31 @@ const Signin = () => {
     <div className="flex justify-center min-h-screen bg-gray-800">
       <div className="w-full max-w-md p-8 rounded-lg shadow-md bg-white">
         <div className="text-center">
-          <h1 className="text-4xl">Jopin the era of Anynomus</h1>
-          <p className="mb-4">Sign up to start your anonymous adventur</p>
+          <h1 className="text-5xl font-extrabold">Join the era of Anonymous</h1>
+          <p className="mb-4 mt-6">Sign up to start your anonymous adventure</p>
         </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-x-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel className="font-semibold text-base">Username</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="username"
                       {...field}
-                      onChange={(e) =>{
-                        field.onChange(e)
-                        setUsername(e.target.value)
+                      onChange={(e) => {
+                        field.onChange(e);
+                        deBounced(e.target.value);
                       }}
                     />
                   </FormControl>
+                  {usernameCheaking && <Loader2 className="animate-spin"/>}
+                  <p className={`text-sm font-semibold ${usernameMessage === "Username is uniqe" ? "text-green-500" : "text-red-500"}`}>
+                     {`${username.length > 0 ? usernameMessage : ""}`}
+                  </p>
                   <FormMessage />
                 </FormItem>
               )}
@@ -128,12 +130,9 @@ const Signin = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className="font-semibold text-base">Email</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="email"
-                      {...field}
-                    />
+                    <Input placeholder="email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -144,15 +143,15 @@ const Signin = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className="font-semibold text-base">Password</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="password"
                       type="password"
                       {...field}
-                      onChange={(e) =>{
-                        field.onChange(e)
-                        setUsername(e.target.value)
+                      onChange={(e) => {
+                        field.onChange(e);
+                        setUsername(e.target.value);
                       }}
                     />
                   </FormControl>
@@ -163,15 +162,19 @@ const Signin = () => {
             <Button type="submit" disabled={isSubmiting}>
               {isSubmiting ? (
                 <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin"/> Please wait
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
                 </>
-              ) : "SignUp"}
+              ) : (
+                "SignUp"
+              )}
             </Button>
           </form>
         </Form>
         <div className="text-center mt-4">
-            <p>Alredy member?</p>
-            <Link href={"/signin"} className="text-blue-600 hover:text-blue-800">SignIn</Link>
+          <p>Alredy member?</p>
+          <Link href={"/signin"} className="text-blue-600 hover:text-blue-800">
+            SignIn
+          </Link>
         </div>
       </div>
     </div>
