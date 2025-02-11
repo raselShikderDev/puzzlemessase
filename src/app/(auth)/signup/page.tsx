@@ -21,7 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-const Signin = () => {
+const SignUp = () => {
   const [username, setUsername] = useState("");
   const [usernameMessage, setUsernameMessage] = useState("");
   const [usernameCheaking, setUsernameCheaking] = useState(false);
@@ -74,10 +74,11 @@ const Signin = () => {
         title: "Success",
         description: response.data.message,
       });
-      router.replace(`verify/${username}`);
+      router.replace(`/verify/${username}`);
       setIsSubmiting(false);
     } catch (error) {
       console.error("Faild to signup: ", error);
+      console.log(error)
       const axiosError = error as AxiosError<apiResponse>;
       //Default Error Message
       const errorMessage =
@@ -149,10 +150,6 @@ const Signin = () => {
                       placeholder="password"
                       type="password"
                       {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        setUsername(e.target.value);
-                      }}
                     />
                   </FormControl>
                   <FormMessage />
@@ -181,4 +178,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default SignUp;
