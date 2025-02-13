@@ -25,7 +25,6 @@ import { Message } from "@/models/userModel";
 import { useToast } from "@/hooks/use-toast";
 import axios, { AxiosError } from "axios";
 import { apiResponse } from "@/types/appResponse";
-import { messageAcceptValidation } from "@/schemas/acceptMessageSchema";
 
 
 const MessageCard = () => {

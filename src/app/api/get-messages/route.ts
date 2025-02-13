@@ -9,7 +9,6 @@ import mongoose, { Aggregate } from "mongoose";
 
 export async function GET(request:Request){
     await dbConnect()
-
     const session = await getServerSession(authOptions)
     const user = session?.user
     if (!session) {
