@@ -95,7 +95,7 @@ const SignUp = () => {
 
   return (
     <div className="flex justify-center min-h-screen bg-gray-800">
-      <div className="w-full max-w-md p-8 rounded-lg shadow-md bg-white">
+      <div className="w-full max-w-md max-h-min mt-8 p-8 rounded-lg shadow-md bg-white">
         <div className="text-center">
           <h1 className="text-5xl font-extrabold">Join the era of Anonymous</h1>
           <p className="mb-4 mt-6">Sign up to start your anonymous adventure</p>
